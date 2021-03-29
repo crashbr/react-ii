@@ -13,6 +13,12 @@
     border: 1px solid black;
     width: 300px;
 }
+
+.infoDestaque {
+    background-color: teal;
+    box-shadow: 10px 5px 5px wheat;
+}
+
 #data {
     font-size: 25px;
     font-weight: 600;
@@ -37,13 +43,15 @@
     font-size: 40px;
 }
 
-#destacar{
+.destacar{
     margin: 20px;
     padding: 20px;
     font-size: 25px;
-    background-color: white;
+    background-color: lightgrey;
     width: 300px;
 }
+
+.destacar:hover{background-color: lightskyblue;}
 
 .allCards{
     display: flex;

@@ -15,13 +15,6 @@ function App() {
         <div className="allCards">
           {renderizar}
         </div>
-        <div className="cep">
-          <label htmlFor="cep">Digite um CEP: </label>
-          <input type="number" name="cep"/>
-        </div>
-        <div className="consultar">
-          <button>Consultar</button>
-        </div>
       </div>
   );
 }

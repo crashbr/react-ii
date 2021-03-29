@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSun, faCloud, faCloudShowersHeavy, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import './CardTempo.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 
 function CardTempo(props){
@@ -11,41 +11,59 @@ function CardTempo(props){
     let month = dataAtual.getMonth()+1
     let year = dataAtual.getFullYear()
 
-    const[icone,setIcone] = useState('')
+    const[icone,setIcone] = useState()
     const data = `${day}/${month}/${year}`
-    const[tempMin, setTempMin] = useState('')
-    const[tempMax, setTempMax] = useState('')
-    const[cidade,setCidade] = useState('')
+    const[tempMin, setTempMin] = useState()
+    const[tempMax, setTempMax] = useState()
+    const[cidade,setCidade] = useState()
+    const [alteraEstilo, setAlteraEstilo] = useState()
 
+/*     const icone = faCloud
+    const tempMin = 16
+    const tempMax = 28
+    const cidade = 'Nova Petrópolis'
+    const data = `${day}/${month}/${year}`
+    const [alteraEstilo, setAlteraEstilo] = useState('') */
 
-    async function preencherCard(cidade){
-        let url = "https://api.openweathermap.org/data/2.5/weather?id="+ cidade +"&units=metric&appid="+process.env.REACT_APP_API
+    useEffect(() => {
+        async function preencherCard(cidade){
+            let url = "https://api.openweathermap.org/data/2.5/weather?id="+ cidade +"&units=metric&appid="+process.env.REACT_APP_API
 
-        await axios.get(url)
-        .then((res) => {
-            console.log(res.data)
-            setTempMin(Math.floor(res.data.main.temp_min))
-            setTempMax(Math.floor(res.data.main.temp_max))
-            setCidade(res.data.name)
+            await axios.get(url)
+            .then(async (res) => {
+                console.log(res.data)
+                setTempMin(res.data.main.temp_min.toFixed(0))
+                setTempMax(res.data.main.temp_max.toFixed(0))
+                setCidade(res.data.name)
 
-            if(res.data.weather[0].main === "Clear"){
-                setIcone(faSun)
-            } else if(res.data.weather[0].main === "Fog"){
-                setIcone(faCloud)
-            } else {
-                setIcone(faCloudShowersHeavy)
-            }
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
+                if(res.data.weather[0].main === "Clear"){
+                    setIcone(faSun)
+                } else if(res.data.weather[0].main === "Fog" || res.data.weather[0].main === "Clouds"){
+                    setIcone(faCloud)
+                } else {
+                    setIcone(faCloudShowersHeavy)
+                }
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        }
+        preencherCard(props.cidade)
+    })
+
+    function handleClick(){
+        if(alteraEstilo === "infoDestaque"){
+            setAlteraEstilo('')
+        } else {
+        setAlteraEstilo('infoDestaque')
+        }
     }
 
-    preencherCard(props.cidade)
+    
 
     return(
             <div className="container" id="cardPrincipal">
-                <div id="info">
+                <div id="info" className={alteraEstilo}>
                     <div id="data">
                         <p>{cidade}</p>
                         <p>{data}</p>
@@ -63,10 +81,10 @@ function CardTempo(props){
                     </div>
                 </div>
                 <div className="botaoEstiliza">
-                    <button id="destacar">Destacar Card</button>
+                    <button className="destacar" onClick={handleClick}>Destacar Card</button>
                 </div>
             </div>
-    )
+        )
 }
 
 export default CardTempo
